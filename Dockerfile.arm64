@@ -1,3 +1,3 @@
-FROM library/centos:7.4.1708
+FROM centos/aarch64:7
 
 MAINTAINER Valentin Delaye <jonesbusy@gmail.com>
