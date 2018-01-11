@@ -3,27 +3,13 @@ image: jonesbusy/oracle-java-9:latest
 manifests:
   
   -
-    image: jonesbusy/oracle-java-9:arm64
+    image: jonesbusy/oracle-java-9:arm64-latest
     platform:
       architecture: arm64
       variant: v8
       os: linux
-  
   -
-    image: jonesbusy/oracle-java-9:arm5
-    platform:
-      architecture: arm
-      variant: v5
-      os: linux
-
-  -
-    image: jonesbusy/oracle-java-9:arm7
-    platform:
-      architecture: arm
-      variant: v7
-      os: linux
-  -
-    image: jonesbusy/oracle-java-9:amd64
+    image: jonesbusy/oracle-java-9:amd64-latest
     platform:
       architecture: amd64
       os: linux

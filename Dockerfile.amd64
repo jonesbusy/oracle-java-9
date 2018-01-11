@@ -1,3 +1,29 @@
 FROM library/centos:7.4.1708
 
 MAINTAINER Valentin Delaye <jonesbusy@gmail.com>
+
+# Force UTF-8 stuff
+ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8 JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF8" JAVA_HOME=/usr/java/jdk-9.0.1 backend_version=${version}
+
+# Install Oracle JDK and set it as default (can be changed by applications)
+RUN yum update -y && yum install -y curl unzip && curl -O --silent https://d3rh6fyf3sdelq.cloudfront.net/oracle/jdk/9.0.1/jdk-9.0.1_linux-x64_bin.rpm && \ 
+    rpm -i jdk-9.0.1_linux-x64_bin.rpm 
+    
+# Update alternatives 
+RUN update-alternatives --set java /usr/java/jdk-9.0.1/bin/java && yum clean all && java -version
+
+# Add script files
+ADD ["docker-entrypoint.sh", "/"]
+
+# Disable weak SSL cipher
+RUN cp $JAVA_HOME/conf/security/java.security $JAVA_HOME/conf/security/java.security.bak
+RUN sed -i "s/^jdk\.tls\.disabledAlgorithms=.*/jdk\.tls\.disabledAlgorithms=SSLv3, DSA, DES, DESede, SSLv2Hello, SSLv3, TLSv1, TLSv1.1, RC4, MD5withRSA, DH keySize < 2048, EC keySize < 224, RSA keySize < 4096/g" $JAVA_HOME/conf/security/java.security
+
+# Run user
+RUN mkdir /opt/package && \
+    adduser --system --no-create-home --shell /bin/false --gid 0 java && \ 
+    chown -R java:root /opt/package && \
+    chmod +x /docker-entrypoint.sh && \
+    chown java:root /docker-entrypoint.sh
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
