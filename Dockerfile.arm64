@@ -1,0 +1,3 @@
+FROM library/centos:7.4.1708
+
+MAINTAINER Valentin Delaye <jonesbusy@gmail.com>
